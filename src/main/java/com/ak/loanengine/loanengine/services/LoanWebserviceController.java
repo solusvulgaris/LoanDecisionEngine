@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.validation.constraints.Size;
 
 /*
  * Loan Webservice Controller
@@ -38,12 +38,11 @@ public class LoanWebserviceController {
      */
     @GetMapping
     public Decision getDecision(
-            @RequestParam(value = "personalCode") String personalCode,
-            @RequestParam(value = "desiredLoanAmount") String desiredLoanAmount,
-            @RequestParam(value = "loanPeriod") String loanPeriod) {
+            @RequestParam(value = "personalCode")  String personalCode,
+            @RequestParam(value = "desiredLoanAmount") @Size(min = 2000, max = 10000) int desiredLoanAmount,
+            @RequestParam(value = "loanPeriod") @Size(min = 12, max = 60) int loanPeriod) {
         try {
-            BigDecimal calculateLoanAmount = loanService.calculateLoan(personalCode, desiredLoanAmount, loanPeriod);
-            return new Decision(calculateLoanAmount);
+            return loanService.calculateLoan(personalCode, desiredLoanAmount, loanPeriod);
         } catch (UserNotFoundException e) {
             logger.log(Level.WARNING, e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
