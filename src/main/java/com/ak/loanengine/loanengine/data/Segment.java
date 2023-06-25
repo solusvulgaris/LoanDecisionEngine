@@ -32,4 +32,13 @@ public class Segment {
 
     public Segment() {
     }
+
+    @Override
+    public String toString() {
+        return "Segment{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", modifier=" + modifier +
+                '}';
+    }
 }

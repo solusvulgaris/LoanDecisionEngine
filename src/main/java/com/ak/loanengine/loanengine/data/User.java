@@ -26,7 +26,7 @@ public class User {
 
     @Column(name = "PERSONAL_CODE")
     private String code;
-/*
+
     @Column(name = "USER_NAME")
     private String name;
 
@@ -44,5 +44,18 @@ public class User {
 
     @Column(name = "SEGMENT_ID")
     private long segmentId;
-    */
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", debt=" + debt +
+                ", segmentId=" + segmentId +
+                '}';
+    }
 }
