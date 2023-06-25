@@ -26,7 +26,7 @@ public class Segment {
     private String name;
 
     @Column(name = "CREDIT_MODIFIER")
-    private long modifier;
+    private int modifier;
 
     public Segment() {
     }
