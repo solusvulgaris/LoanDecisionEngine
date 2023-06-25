@@ -45,7 +45,7 @@ public class LoanWebserviceController {
             BigDecimal calculateLoanAmount = loanService.calculateLoan(personalCode, desiredLoanAmount, loanPeriod);
             return new Decision(calculateLoanAmount);
         } catch (UserNotFoundException e) {
-            logger.log(Level.WARNING, "There is no user with personal code {0}", personalCode);
+            logger.log(Level.WARNING, e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
