@@ -28,7 +28,7 @@ public class LoanService {
             throws UserNotFoundException {
         Optional<User> user = userRepository.findByCode(personalCode);
         if (user.isEmpty()) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException(String.format("There is no user with personal code: %s", personalCode));
         } else {
             if (user.get().isDebt()) {
                 return new BigDecimal(0);
