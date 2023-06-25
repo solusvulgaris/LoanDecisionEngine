@@ -1,22 +1,17 @@
 package com.ak.loanengine.loanengine.util;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
  * Decision entity
  */
+@Getter
 public class Decision {
     private final boolean value;
     private final BigDecimal amount;
-
-    public boolean isValue() {
-        return value;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
 
     public Decision(BigDecimal amount) {
         value = !amount.equals(new BigDecimal(0));
