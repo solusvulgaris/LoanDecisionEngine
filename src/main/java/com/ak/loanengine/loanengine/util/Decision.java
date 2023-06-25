@@ -10,11 +10,16 @@ import java.util.Objects;
  */
 @Getter
 public class Decision {
-    private final boolean value;
+    private final boolean approved;
     private final BigDecimal amount;
 
+    public Decision() {
+        amount = new BigDecimal(0);
+        approved = false;
+    }
+
     public Decision(BigDecimal amount) {
-        value = !amount.equals(new BigDecimal(0));
+        approved = !amount.equals(new BigDecimal(0));
         this.amount = amount;
     }
 
