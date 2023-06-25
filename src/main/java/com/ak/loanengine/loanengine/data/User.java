@@ -1,7 +1,6 @@
 package com.ak.loanengine.loanengine.data;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +14,6 @@ import javax.persistence.Table;
  * lightweight class persisted to a USER table in a H2 DB
  */
 @Getter
-@Setter
 @Entity
 @Table(name = "USERS")
 public class User {
