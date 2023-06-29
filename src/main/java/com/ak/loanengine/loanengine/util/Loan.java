@@ -12,7 +12,7 @@ public class Loan {
     private String personalCode;
     @Min(2000)
     @Max(10000)
-    private int desiredLoanAmount;
+    private int loanAmount;
     @Min(12)
     @Max(60)
     private int loanPeriod;
