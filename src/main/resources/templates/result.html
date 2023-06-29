@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Your Request</h1>
-<p th:text="${loan.decision.approved} ? 'Approved with max sum ' + ${loan.decision.amount} + ' for the period of ' + ${loan.loanPeriod} + ' months.' : 'Declined.'"/>
+<p th:text="${loan.decision.approved} ? 'Approved with max sum ' + ${loan.decision.amount} + ' for the period of ' + ${loan.decision.period} + ' months.' : 'Declined.'"/>
 <a href="/">Submit another loan</a>
 </body>
 </html>
