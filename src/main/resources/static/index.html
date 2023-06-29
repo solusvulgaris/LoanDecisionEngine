@@ -6,8 +6,21 @@
 </head>
 <body>
 <h1>Loan Decision Engine</h1>
+<div>
+<table>
+  <thead>
+    <tr><th colspan="3">The personal codes table example</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>49002010965</td><td>debt</td><td>declined</td></tr>
+    <tr><td>49002010976</td><td>100</td><td>6000.0, 60</td></tr>
+    <tr><td>49002010987</td><td>300</td><td>10000.0, 34</td></tr>
+    <tr><td>49002010998</td><td>1000</td><td>10000.0, 12</td></tr>
+  </tbody>
+</table>
+</div>
 <form method="post" th:method="post" action="api/loan" th:action="@{/api/loan}" object="${loan}" th:object="${loan}" >
-  <label for="personalCode"/>Your Personal Code (e.g. "49002010976"):</label>
+  <label for="personalCode"/>Your Personal Code (e.g. ""):</label>
   <p><input type="text" maxlenght="11" th:field="*{personalCode}" name="personalCode" id="personalCode" /></p>
   <label for="loanPeriod"/>Desired Loan Period:</label>
   <p><input type="number" min="12" max="60" th:field="*{loanPeriod}" name="loanPeriod" id="loanPeriod" /></p>
