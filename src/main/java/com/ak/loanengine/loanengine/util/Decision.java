@@ -16,7 +16,7 @@ public class Decision implements Comparable<Decision> {
 
     public Decision() {
         approved = false;
-        amount = new BigDecimal(0);
+        amount = BigDecimal.valueOf(0.0);
         period = 0;
     }
 
