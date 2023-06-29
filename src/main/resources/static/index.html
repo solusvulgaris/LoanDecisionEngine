@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1>Loan Decision Engine</h1>
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th colspan="2">The personal codes table example</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>49002010965</td>
+            <td>debt</td>
+        </tr>
+        <tr>
+            <td>49002010976</td>
+            <td>100</td>
+        </tr>
+        <tr>
+            <td>49002010987</td>
+            <td>300</td>
+        </tr>
+        <tr>
+            <td>49002010998</td>
+            <td>1000</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<br/>
+<form method="post" th:method="post" action="api/loan" th:action="@{/api/loan}" object="${loan}" th:object="${loan}">
+    <table>
+        <tbody>
+        <tr>
+            <td>Your Personal Code:</td>
+            <td><input type="text" maxlenght="11" th:field="*{personalCode}" name="personalCode"/></td>
+        </tr>
+        <tr>
+            <td>Desired Loan Period:</td>
+            <td><input type="number" min="12" max="60" th:field="*{loanPeriod}" name="loanPeriod"/></td>
+        </tr>
+        <tr>
+            <td>Desired Loan Amount:</td>
+            <td><input type="number" min="2000" max="10000" th:field="*{loanAmount}" name="loanAmount"/></td>
+        </tr>
+        </tbody>
+    </table>
+    <br/>
+    <input type="submit" value="Calculate!">
+</form>
+</body>
+</html>
