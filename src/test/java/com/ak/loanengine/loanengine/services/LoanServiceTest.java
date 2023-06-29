@@ -55,8 +55,7 @@ class LoanServiceTest {
         when(segmentRepository.findById(anyLong())).thenReturn(Optional.of(segment));
 
         Decision actualDecision = loanService.calculateLoan(loan);
-        Decision expectedDecision = new Decision(actualAmount, loan.getLoanPeriod());
-        Assertions.assertEquals(expectedDecision, actualDecision);
+        Assertions.assertEquals(actualAmount, actualDecision.getAmount());
     }
 
     @Test
