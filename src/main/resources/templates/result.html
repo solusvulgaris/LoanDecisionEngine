@@ -1,0 +1,12 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Your Request</h1>
+<p th:text="${loan.decision.approved} ? 'Approved with max sum ' + ${loan.decision.amount} + ' for the period of ' + ${loan.loanPeriod} + ' months.' : 'Declined.'"/>
+<a href="/">Submit another loan</a>
+</body>
+</html>
