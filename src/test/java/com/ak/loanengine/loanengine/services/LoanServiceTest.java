@@ -6,7 +6,9 @@ import com.ak.loanengine.loanengine.data.User;
 import com.ak.loanengine.loanengine.data.UserRepository;
 import com.ak.loanengine.loanengine.exceptions.UserNotFoundException;
 import com.ak.loanengine.loanengine.util.Decision;
+import com.ak.loanengine.loanengine.util.Loan;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,10 +30,18 @@ class LoanServiceTest {
     private final LoanService loanService = new LoanService(segmentRepository, userRepository);
     private final Segment segment = Mockito.mock(Segment.class);
     private final User user = Mockito.mock(User.class);
+    private static final Loan loan = new Loan();
+
+    @BeforeAll
+    static void setUpAll() {
+        loan.setPersonalCode("49002010976");
+        loan.setLoanAmount(2000);
+        loan.setLoanPeriod(12);
+    }
 
     public static Stream<Arguments> testData() {
         return Stream.of(
-                Arguments.of(1000, true, 2000),
+                Arguments.of(1000, true, 10000),
                 Arguments.of(100, false, 0)
         );
     }
@@ -44,10 +54,10 @@ class LoanServiceTest {
         when(segment.getModifier()).thenReturn(modifier);
         when(segmentRepository.findById(anyLong())).thenReturn(Optional.of(segment));
 
-        Decision actualDecision = loanService.calculateLoan("49002010976", 2000, 12);
+        Decision actualDecision = loanService.calculateLoan(loan);
         Assertions.assertEquals(approved, actualDecision.isApproved());
 
-        Decision expectedDecision = new Decision(new BigDecimal(actualAmount));
+        Decision expectedDecision = new Decision(new BigDecimal(actualAmount), loan.getLoanPeriod());
         Assertions.assertEquals(expectedDecision, actualDecision);
     }
 
@@ -56,7 +66,7 @@ class LoanServiceTest {
         when(user.isDebt()).thenReturn(true);
         when(userRepository.findByCode(anyString())).thenReturn(Optional.of(user));
 
-        Decision actualDecision = loanService.calculateLoan("49002010965", 2000, 12);
+        Decision actualDecision = loanService.calculateLoan(loan);
         Assertions.assertFalse(actualDecision.isApproved());
         Assertions.assertEquals(0, actualDecision.getAmount().intValue());
     }
@@ -67,12 +77,41 @@ class LoanServiceTest {
         final Class<UserNotFoundException> expectedExceptionClass = UserNotFoundException.class;
         final String expectedExceptionMessage = "There is no user with personal code: 123";
 
+        loan.setPersonalCode("123");
         final Exception actualException = Assertions.assertThrows(
                 expectedExceptionClass,
-                () -> loanService.calculateLoan("123", 2000, 12)
+                () -> loanService.calculateLoan(loan)
         );
         Assertions.assertEquals(expectedExceptionClass, actualException.getClass(), "Exception class");
         Assertions.assertEquals(expectedExceptionMessage, actualException.getMessage(), "Exception message");
+    }
+
+    public static Stream<Arguments> calculationTestData() {
+        return Stream.of(
+                Arguments.of(100, 2000, 12, BigDecimal.valueOf(6000.0), 60),
+                Arguments.of(100, 2000, 60, BigDecimal.valueOf(6000.0), 60),
+                Arguments.of(100, 10000, 12, BigDecimal.valueOf(6000.0), 60),
+                Arguments.of(100, 10000, 60, BigDecimal.valueOf(6000.0), 60),
+                Arguments.of(300, 2000, 12, BigDecimal.valueOf(10000.0), 34),
+                Arguments.of(300, 10000, 60, BigDecimal.valueOf(10000.0), 34),
+                Arguments.of(300, 2000, 12, BigDecimal.valueOf(10000.0), 34),
+                Arguments.of(300, 10000, 60, BigDecimal.valueOf(10000.0), 34),
+                Arguments.of(1000, 2000, 12, BigDecimal.valueOf(10000.0), 12),
+                Arguments.of(1000, 2000, 60, BigDecimal.valueOf(10000.0), 12),
+                Arguments.of(1000, 10000, 12, BigDecimal.valueOf(10000.0), 12),
+                Arguments.of(1000, 10000, 60, BigDecimal.valueOf(10000.0), 12)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("calculationTestData")
+    @DisplayName("test calculate loan")
+    void calculateLoan(float creditModifier, float desiredLoanAmount, float loanPeriod, BigDecimal actualAmount, int actualPeriod) {
+        loanService.setInitialLoanAmount(desiredLoanAmount);
+        loanService.setInitialLoanPeriod(loanPeriod);
+        Decision decision = loanService.calculate(creditModifier, desiredLoanAmount, loanPeriod);
+        Assertions.assertEquals(actualAmount, decision.getAmount());
+        Assertions.assertEquals(actualPeriod, decision.getPeriod());
     }
 
 }
