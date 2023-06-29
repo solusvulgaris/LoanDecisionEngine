@@ -41,23 +41,21 @@ class LoanServiceTest {
 
     public static Stream<Arguments> testData() {
         return Stream.of(
-                Arguments.of(1000, true, 10000),
-                Arguments.of(100, false, 0)
+                Arguments.of(1000, false, BigDecimal.valueOf(10000.0)),
+                Arguments.of(100, true, BigDecimal.valueOf(0.0))
         );
     }
 
     @ParameterizedTest
     @MethodSource("testData")
-    void getDecision(int modifier, boolean approved, int actualAmount) {
-        when(user.isDebt()).thenReturn(false);
+    void getDecision(int modifier, boolean isDebt, BigDecimal actualAmount) {
+        when(user.isDebt()).thenReturn(isDebt);
         when(userRepository.findByCode(anyString())).thenReturn(Optional.of(user));
         when(segment.getModifier()).thenReturn(modifier);
         when(segmentRepository.findById(anyLong())).thenReturn(Optional.of(segment));
 
         Decision actualDecision = loanService.calculateLoan(loan);
-        Assertions.assertEquals(approved, actualDecision.isApproved());
-
-        Decision expectedDecision = new Decision(new BigDecimal(actualAmount), loan.getLoanPeriod());
+        Decision expectedDecision = new Decision(actualAmount, loan.getLoanPeriod());
         Assertions.assertEquals(expectedDecision, actualDecision);
     }
 
